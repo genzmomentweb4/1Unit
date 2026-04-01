@@ -13,3 +13,49 @@ OceanOS does not define authority structures or organizational hierarchies. Inst
 The design philosophy of OceanOS is rooted in verifiability, neutrality, and persistence. Systems built on OceanOS are intended to operate continuously, adapting through rule updates rather than discretionary decisions. This ensures that evolution occurs transparently and predictably, maintaining alignment with the protocol’s foundational principles.
 
 OceanOS is not an application, but a base layer—an operating substrate for building decentralized systems that prioritize rules over authority, verification over trust, and continuity over control.
+
+
+// OceanOS — Public Code
+
+#include <vector>
+#include <string>
+#include <ctime>
+
+struct Contribution {
+    std::string contributor;
+    int value;
+    std::time_t timestamp;
+};
+
+struct Ownership {
+    std::string entity;
+    double share;
+};
+
+static std::vector<Contribution> ledger;
+
+void recordContribution(const std::string& id, int value) {
+    ledger.push_back({id, value, std::time(nullptr)});
+}
+
+std::vector<Ownership> deriveOwnership() {
+    std::vector<Ownership> result;
+    int total = 0;
+
+    for (const auto& c : ledger) {
+        total += c.value;
+    }
+
+    if (total == 0) return result;
+
+    for (const auto& c : ledger) {
+        result.push_back({
+            c.contributor,
+            static_cast<double>(c.value) / total
+        });
+    }
+
+    return result;
+}
+
+void aiExecute(const std::string& task);
